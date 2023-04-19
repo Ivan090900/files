@@ -1,0 +1,15 @@
+const fs = require('fs');
+const crypto = require('crypto');
+
+function encryptFile(filepath, key) {
+  const plaintext = fs.readFileSync(filepath);
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+  const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+  const encryptedData = Buffer.concat([iv, ciphertext]);
+  fs.writeFileSync(filepath, encryptedData);
+}
+
+const filepath = 'ABOBA.txt';
+const key = Buffer.from('my-secret-key');
+encryptFile(filepath, key);
